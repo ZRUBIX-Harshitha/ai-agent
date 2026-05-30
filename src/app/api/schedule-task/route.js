@@ -18,7 +18,7 @@ export async function POST(req) {
       voice: voice || 'whatsapp',
     };
 
-    scheduleTask(task);
+    await scheduleTask(task);
 
     return NextResponse.json({ success: true, taskId: task.id });
   } catch (error) {

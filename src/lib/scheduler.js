@@ -1,67 +1,35 @@
-import cron from 'node-cron';
-import fs from 'fs';
-import path from 'path';
+import { Redis } from '@upstash/redis';
 import { sendWhatsAppMessage } from './whatsapp';
 
-const TASKS_FILE = path.join(process.cwd(), 'tasks.json');
+const redis = Redis.fromEnv();
 
-if (!fs.existsSync(TASKS_FILE)) {
-  fs.writeFileSync(TASKS_FILE, JSON.stringify([]));
-}
-
-function getTasks() {
+export async function getTasks() {
   try {
-    const data = fs.readFileSync(TASKS_FILE, 'utf-8');
-    return JSON.parse(data);
+    const tasks = await redis.get('ai-tasks');
+    return tasks || [];
   } catch (e) {
+    console.error('Error fetching tasks from Redis:', e);
     return [];
   }
 }
 
-function saveTasks(tasks) {
-  fs.writeFileSync(TASKS_FILE, JSON.stringify(tasks, null, 2));
-}
-
-export function scheduleTask(task) {
-  const tasks = getTasks();
-  tasks.push({ ...task, status: 'pending' });
-  saveTasks(tasks);
-}
-
-export function unScheduleTask(taskId) {
-  const tasks = getTasks();
-  saveTasks(tasks.filter(t => t.id !== taskId));
-}
-
-// Every minute check
-cron.schedule('* * * * *', async () => {
-  const tasks = getTasks();
-  const now = new Date();
-  let updated = false;
-
-  console.log(`[Scheduler] Checking tasks at ${now.toISOString()}...`);
-
-  for (const task of tasks) {
-    const taskTime = new Date(task.scheduledTime);
-
-    if (taskTime <= now && task.status === 'pending') {
-      console.log(`[Scheduler] Executing task: ${task.message} for ${task.phone || 'Browser'}`);
-
-      try {
-        if (task.voice === 'virtual') {
-          task.status = 'completed'; // Handled by frontend
-        } else if (task.voice === 'whatsapp') {
-          await sendWhatsAppMessage(task.phone, task.message);
-          task.status = 'completed';
-        }
-        updated = true;
-      } catch (error) {
-        console.error(`[Scheduler] Task failed for ${task.id}:`, error.message);
-        task.status = 'failed';
-        updated = true;
-      }
-    }
+export async function saveTasks(tasks) {
+  try {
+    await redis.set('ai-tasks', tasks);
+  } catch (e) {
+    console.error('Error saving tasks to Redis:', e);
   }
+}
 
-  if (updated) saveTasks(tasks);
-});
+export async function scheduleTask(task) {
+  const tasks = await getTasks();
+  tasks.push({ ...task, status: 'pending' });
+  await saveTasks(tasks);
+}
+
+export async function unScheduleTask(taskId) {
+  const tasks = await getTasks();
+  await saveTasks(tasks.filter(t => t.id !== taskId));
+}
+
+// The Cron logic is now moved to the new /api/cron endpoint!

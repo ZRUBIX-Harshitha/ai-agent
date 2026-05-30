@@ -155,7 +155,7 @@ export default function AITaskPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white flex flex-col items-center py-12 px-6 space-y-12 [color-scheme:dark]">
+    <main className="min-h-screen bg-[#0f172a] text-white flex flex-col items-center py-12 px-6 space-y-12 [color-scheme:dark]">
       {/* Header */}
       <div className="text-center space-y-3">
         <h1 className="text-6xl font-black tracking-tight bg-gradient-to-r from-emerald-400 via-blue-500 to-indigo-600 bg-clip-text text-transparent">
@@ -174,12 +174,13 @@ export default function AITaskPage() {
 
           <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
             <div className="space-y-3">
-              <label className="text-sm font-semibold text-slate-300 ml-1">Task Description</label>
+              <label htmlFor="task" className="text-sm font-semibold text-slate-300 ml-1">Task Description</label>
               <input
+                id="task"
                 type="text"
                 required
                 placeholder="Finish the project..."
-                className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600 text-lg"
+                className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder:text-slate-400 text-lg"
                 value={task}
                 onChange={(e) => setTask(e.target.value)}
               />
@@ -187,8 +188,9 @@ export default function AITaskPage() {
 
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-3">
-                <label className="text-sm font-semibold text-slate-300 ml-1">Date</label>
+                <label htmlFor="date" className="text-sm font-semibold text-slate-300 ml-1">Date</label>
                 <input
+                  id="date"
                   type="date"
                   required
                   className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all text-slate-200"
@@ -197,8 +199,9 @@ export default function AITaskPage() {
                 />
               </div>
               <div className="space-y-3">
-                <label className="text-sm font-semibold text-slate-300 ml-1">Time</label>
+                <label htmlFor="time" className="text-sm font-semibold text-slate-300 ml-1">Time</label>
                 <input
+                  id="time"
                   type="time"
                   required
                   className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all text-slate-200"
@@ -211,25 +214,26 @@ export default function AITaskPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {voice === 'whatsapp' && (
                 <div className="space-y-3">
-                  <label className="text-sm font-semibold text-slate-300 ml-1">
+                  <label htmlFor="whatsapp-phone" className="text-sm font-semibold text-slate-300 ml-1">
                     WhatsApp Phone Number
                   </label>
-                  <input type="tel" required placeholder="Phone (e.g. 91987...)" className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all text-sm" value={whatsappPhone} onChange={(e) => setWhatsappPhone(e.target.value)} />
+                  <input id="whatsapp-phone" type="tel" required placeholder="Phone (e.g. 91987...)" className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all text-sm" value={whatsappPhone} onChange={(e) => setWhatsappPhone(e.target.value)} />
                 </div>
               )}
 
               {voice === 'virtual' && (
                 <div className="space-y-3">
                   <label className="text-sm font-semibold text-slate-300 ml-1">Offline Mode</label>
-                  <div className="w-full bg-black/20 border border-white/5 rounded-2xl px-6 py-4 text-slate-500 text-sm">
+                  <div className="w-full bg-black/20 border border-white/5 rounded-2xl px-6 py-4 text-slate-400 text-sm">
                     Browser speaker will be used.
                   </div>
                 </div>
               )}
 
               <div className="space-y-3">
-                <label className="text-sm font-semibold text-slate-300 ml-1">Remind Via</label>
+                <label htmlFor="voice-select" className="text-sm font-semibold text-slate-300 ml-1">Remind Via</label>
                 <select
+                  id="voice-select"
                   className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all text-slate-200 appearance-none pointer"
                   value={voice}
                   onChange={(e) => setVoice(e.target.value)}
@@ -294,7 +298,7 @@ export default function AITaskPage() {
                 <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto">
                   <span className="text-2xl opacity-50">📅</span>
                 </div>
-                <p className="text-slate-500">No tasks scheduled yet.</p>
+                <p className="text-slate-400">No tasks scheduled yet.</p>
               </div>
             ) : (
               scheduledTasks.map((t) => (
@@ -316,6 +320,7 @@ export default function AITaskPage() {
                     <button
                       onClick={() => handleDelete(t.id)}
                       className="opacity-0 group-hover:opacity-100 bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white p-2.5 rounded-xl transition-all"
+                      aria-label="Delete task"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /></svg>
                     </button>
@@ -325,7 +330,7 @@ export default function AITaskPage() {
                     <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest ${getStatusColor(t.status)}`}>
                       {t.status.replace(/_/g, ' ')}
                     </span>
-                    <span className="text-[10px] text-slate-600 font-mono">
+                    <span className="text-[10px] text-slate-400 font-mono">
                       ID: {t.id.split('-')[0]}
                     </span>
                   </div>
@@ -335,6 +340,6 @@ export default function AITaskPage() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

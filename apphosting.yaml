@@ -1,0 +1,17 @@
+# Firebase App Hosting Configuration
+env:
+  - variable: WHATSAPP_TOKEN
+    value: "EAAOTPaQVbKABRvdm9ZAauS8s9T8UNqVOoRpsHRF2cRlnoRbcMVwYKxwdoZAP1KbsuCZC1QzZC3HiGBz3H8uy6guapz3sZC0iynZAxVOXi8rhznxoauwbHbDXL17nUCeBd1dKRdfZBt7xuKkM5pIjmSAqnAcmxgLbGe4THvwokZCsZBngKbw4OM4xB3Q6vvoMZCeFxAH8RKXSQkMKZCNefcbIj4pyhEFPnK0rcgZAVyj7PW70SMitZB8PeQI0MZB2wfRncoYtI1OIQafa4Co17glAN2NsRKzeRMrwZDZD"
+    availability:
+      - RUNTIME
+      - BUILD
+  - variable: PHONE_NUMBER_ID
+    value: "1083960074809421"
+    availability:
+      - RUNTIME
+      - BUILD
+  - variable: NEXT_PUBLIC_BASE_URL
+    value: "http://localhost:3000"
+    availability:
+      - RUNTIME
+      - BUILD

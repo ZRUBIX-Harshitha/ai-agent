@@ -24,7 +24,7 @@ export async function makeVoiceCall(to, message, voice = 'alice') {
     twiml: `<Response><Say voice="${voice}">${message}</Say></Response>`,
     to,
     from: fromNumber,
-    statusCallback: `${process.env.NEXT_PUBLIC_BASE_URL}/api/twilio/status-callback`,
+    statusCallback: `http://localhost:3000/api/twilio/status-callback`,
     statusCallbackEvent: ['completed', 'no-answer', 'busy', 'failed'],
   }).then(call => call.sid);
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const VOICES = [
   { id: 'whatsapp', name: 'WhatsApp Business' },
@@ -16,6 +16,8 @@ export default function AITaskPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
   const [scheduledTasks, setScheduledTasks] = useState([]);
+  
+  const tasksRef = useRef([]);
 
   useEffect(() => {
     fetchTasks();
@@ -24,14 +26,16 @@ export default function AITaskPage() {
       checkVirtualAlarms();
     }, 30000);
     return () => clearInterval(interval);
-  }, [scheduledTasks]);
+  }, []);
 
   const fetchTasks = async () => {
     try {
       const res = await fetch('/api/tasks');
       const data = await res.json();
       if (Array.isArray(data)) {
-        setScheduledTasks(data.sort((a, b) => new Date(a.scheduledTime) - new Date(b.scheduledTime)));
+        const sorted = data.sort((a, b) => new Date(a.scheduledTime) - new Date(b.scheduledTime));
+        setScheduledTasks(sorted);
+        tasksRef.current = sorted;
       }
     } catch (error) {
       console.error('Failed to fetch tasks:', error);
@@ -40,7 +44,7 @@ export default function AITaskPage() {
 
   const checkVirtualAlarms = () => {
     const now = new Date();
-    scheduledTasks.forEach(t => {
+    tasksRef.current.forEach(t => {
       const tTime = new Date(t.scheduledTime);
       if (t.voice === 'virtual' && t.status === 'pending' && tTime <= now) {
         triggerVirtualCall(t);

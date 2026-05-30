@@ -1,9 +1,21 @@
 import { NextResponse } from 'next/server';
-import { getTasks, unScheduleTask } from '@/lib/scheduler';
+import fs from 'fs';
+import path from 'path';
+import { unScheduleTask } from '@/lib/scheduler';
+
+const TASKS_FILE = path.join(process.cwd(), 'tasks.json');
+
+function getTasks() {
+  if (!fs.existsSync(TASKS_FILE)) {
+    return [];
+  }
+  const data = fs.readFileSync(TASKS_FILE, 'utf-8');
+  return JSON.parse(data);
+}
 
 export async function GET() {
   try {
-    const tasks = await getTasks();
+    const tasks = getTasks();
     return NextResponse.json(tasks);
   } catch (error) {
     console.error('API Error:', error);
@@ -18,7 +30,7 @@ export async function DELETE(req) {
       return NextResponse.json({ error: 'Missing task ID' }, { status: 400 });
     }
 
-    await unScheduleTask(id);
+    unScheduleTask(id);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('API Error:', error);

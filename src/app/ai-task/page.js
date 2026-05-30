@@ -3,9 +3,7 @@
 import { useState, useEffect } from 'react';
 
 const VOICES = [
-  { id: 'telegram', name: 'Telegram Bot (Free AI Voice)' },
-  { id: 'whatsapp_free', name: 'WhatsApp (Free Text)' },
-  { id: 'both', name: 'Both (Telegram Voice + WhatsApp Text)' },
+  { id: 'whatsapp', name: 'WhatsApp Business' },
   { id: 'virtual', name: 'Offline Virtual AI (Free Browser)' },
 ];
 
@@ -13,81 +11,20 @@ export default function AITaskPage() {
   const [task, setTask] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const [chatId, setChatId] = useState('');
-  const [whatsappPhone, setWhatsappPhone] = useState('');
-  const [whatsappApiKey, setWhatsappApiKey] = useState('');
-  const [voice, setVoice] = useState('telegram');
+  const [whatsappPhone, setWhatsappPhone] = useState('917010156378');
+  const [voice, setVoice] = useState('whatsapp');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
   const [scheduledTasks, setScheduledTasks] = useState([]);
-  const [telegramStatus, setTelegramStatus] = useState(null);
-  const [testLoading, setTestLoading] = useState(false);
 
   useEffect(() => {
     fetchTasks();
-    checkConfig();
     const interval = setInterval(() => {
       fetchTasks();
       checkVirtualAlarms();
     }, 30000);
     return () => clearInterval(interval);
   }, [scheduledTasks]);
-
-  const checkConfig = async () => {
-    try {
-      const res = await fetch('/api/debug');
-      const data = await res.json();
-      setTelegramStatus(data);
-    } catch (e) {
-      console.error('Config check failed');
-    }
-  };
-
-  const testTelegram = async () => {
-    if (!chatId) {
-      setMessage({ text: 'Please enter a Chat ID first!', type: 'error' });
-      return;
-    }
-    setTestLoading(true);
-    try {
-      const res = await fetch('/api/test-telegram', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chatId }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setMessage({ text: '✅ Test message sent! Check your Telegram.', type: 'success' });
-      } else {
-        setMessage({ text: `❌ Failed: ${data.error}. Did you send /start to the bot?`, type: 'error' });
-      }
-    } catch (e) {
-      setMessage({ text: 'Connection error.', type: 'error' });
-    } finally {
-      setTestLoading(false);
-    }
-  };
-
-  const testWhatsApp = async () => {
-    if (!whatsappPhone || !whatsappApiKey) {
-      setMessage({ text: 'Phone and API Key are required!', type: 'error' });
-      return;
-    }
-    setTestLoading(true);
-    try {
-      const res = await fetch(`https://api.callmebot.com/whatsapp.php?phone=${whatsappPhone}&text=${encodeURIComponent('Test message from AI Reminder!')}&apikey=${whatsappApiKey}`);
-      const data = await res.text();
-      if (data.toLowerCase().includes('success') || data.toLowerCase().includes('message queued')) {
-        setMessage({ text: '✅ WhatsApp test sent! Check your phone.', type: 'success' });
-      } else {
-        setMessage({ text: `❌ Failed: ${data}`, type: 'error' });
-      }
-    } catch (e) {
-      setMessage({ text: 'Connection error.', type: 'error' });
-    } finally {
-      setTestLoading(false);
-    }
-  };
 
   const fetchTasks = async () => {
     try {
@@ -112,22 +49,10 @@ export default function AITaskPage() {
   };
 
   const triggerVirtualCall = (t) => {
-    // 1. Mark as calling
     updateTaskStatus(t.id, 'calling');
-
-    // 2. Vibration for mobile
-    if (navigator.vibrate) {
-      navigator.vibrate([500, 200, 500]);
-    }
-
-    // 3. AI Voice
+    if (navigator.vibrate) navigator.vibrate([500, 200, 500]);
     const utterance = new SpeechSynthesisUtterance(`Hello! This is your AI Reminder. Task: ${t.message}`);
-
-    utterance.onend = () => {
-      updateTaskStatus(t.id, 'completed');
-    };
-
-    // 4. Alert to keep screen awake/notify user
+    utterance.onend = () => updateTaskStatus(t.id, 'completed');
     alert(`📢 ALERT: ${t.message}`);
     window.speechSynthesis.speak(utterance);
   };
@@ -139,8 +64,6 @@ export default function AITaskPage() {
   const updateTaskStatus = async (id, status) => {
     if (id === 'test') return;
     try {
-      // In a real app we'd call an API. For now we just refresh locally
-      // but we could also DELETE it from the backend to mark as done.
       await fetch('/api/tasks', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
@@ -165,9 +88,7 @@ export default function AITaskPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: task,
-          chatId: voice === 'telegram' ? chatId : null,
-          phone: voice === 'whatsapp_free' ? whatsappPhone : null,
-          whatsappApiKey: voice === 'whatsapp_free' ? whatsappApiKey : null,
+          phone: voice === 'whatsapp' ? whatsappPhone : null,
           scheduledTime,
           voice,
         }),
@@ -177,7 +98,6 @@ export default function AITaskPage() {
       if (data.success) {
         setMessage({ text: 'Task scheduled successfully!', type: 'success' });
         setTask(''); setDate(''); setTime('');
-        if (voice === 'telegram') setChatId('');
         fetchTasks();
       } else {
         setMessage({ text: data.error || 'Failed to schedule.', type: 'error' });
@@ -207,9 +127,7 @@ export default function AITaskPage() {
       case 'pending': return 'text-amber-400 bg-amber-400/10';
       case 'calling': return 'text-blue-400 bg-blue-400/10 animate-pulse';
       case 'completed': return 'text-emerald-400 bg-emerald-400/10';
-      case 'failed':
-      case 'failed_notified':
-      case 'failed_fallback_sent': return 'text-rose-400 bg-rose-400/10';
+      case 'failed': return 'text-rose-400 bg-rose-400/10';
       default: return 'text-slate-400 bg-slate-400/10';
     }
   };
@@ -222,7 +140,7 @@ export default function AITaskPage() {
           AI Multi-Reminder
         </h1>
         <p className="text-slate-400 text-lg max-w-md mx-auto">
-          Free AI Voice reminders on Telegram and Text reminders on WhatsApp.
+          Automated Text reminders on WhatsApp Business.
         </p>
       </div>
 
@@ -233,32 +151,6 @@ export default function AITaskPage() {
           <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-indigo-600/20 blur-[100px] rounded-full"></div>
 
           <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
-            {(voice === 'telegram' || voice === 'both') && (
-              <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl space-y-2">
-                <p className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Telegram Instructions:</p>
-                <p className="text-sm text-slate-300">1. Open Telegram & search for your Bot.</p>
-                <p className="text-sm text-slate-300">2. Type <code className="bg-black/30 px-1.5 py-0.5 rounded">/start</code> to get your Chat ID.</p>
-              </div>
-            )}
-
-            {(voice === 'whatsapp_free' || voice === 'both') && (
-              <div className="p-5 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl space-y-3">
-                <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest flex items-center">
-                  <span className="bg-emerald-500 w-1.5 h-1.5 rounded-full mr-2 animate-pulse"></span>
-                  WhatsApp Quick Setup
-                </p>
-                <p className="text-sm text-slate-300">Register in 1-click to get your Free API Key:</p>
-                <a 
-                  href="https://wa.me/34621331744?text=I%20allow%20callmebot%20to%20send%20me%20messages" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-block bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all"
-                >
-                  🚀 Click to Register on WhatsApp
-                </a>
-              </div>
-            )}
-
             <div className="space-y-3">
               <label className="text-sm font-semibold text-slate-300 ml-1">Task Description</label>
               <input
@@ -294,31 +186,13 @@ export default function AITaskPage() {
               </div>
             </div>
 
-            <div className={`grid grid-cols-1 ${voice === 'both' ? 'md:grid-cols-1 gap-8' : 'md:grid-cols-2 gap-6'}`}>
-              {(voice === 'telegram' || voice === 'both') && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {voice === 'whatsapp' && (
                 <div className="space-y-3">
-                  <label className="text-sm font-semibold text-slate-300 ml-1 flex justify-between">
-                    Telegram Chat ID
-                    <button type="button" onClick={testTelegram} disabled={testLoading} className="text-[10px] uppercase bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded border border-indigo-500/30 transition-all">
-                      {testLoading ? '...' : '⚡ Test'}
-                    </button>
+                  <label className="text-sm font-semibold text-slate-300 ml-1">
+                    WhatsApp Phone Number
                   </label>
-                  <input type="text" required placeholder="e.g. 12345678" className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all" value={chatId} onChange={(e) => setChatId(e.target.value)} />
-                </div>
-              )}
-              
-              {(voice === 'whatsapp_free' || voice === 'both') && (
-                <div className="space-y-3">
-                  <label className="text-sm font-semibold text-slate-300 ml-1 flex justify-between">
-                    WhatsApp Info
-                    <button type="button" onClick={testWhatsApp} disabled={testLoading} className="text-[10px] uppercase bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30 transition-all">
-                      {testLoading ? '...' : '⚡ Test'}
-                    </button>
-                  </label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="tel" required placeholder="Phone (e.g. 91987...)" className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all text-sm" value={whatsappPhone} onChange={(e) => setWhatsappPhone(e.target.value)} />
-                    <input type="text" required placeholder="API Key" className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all text-sm" value={whatsappApiKey} onChange={(e) => setWhatsappApiKey(e.target.value)} />
-                  </div>
+                  <input type="tel" required placeholder="Phone (e.g. 91987...)" className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all text-sm" value={whatsappPhone} onChange={(e) => setWhatsappPhone(e.target.value)} />
                 </div>
               )}
 
@@ -346,11 +220,7 @@ export default function AITaskPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <button
                 type="submit"
-                disabled={loading || 
-                  (voice === 'telegram' && (!telegramStatus?.isReady || !chatId)) || 
-                  (voice === 'whatsapp_free' && (!whatsappPhone || !whatsappApiKey)) ||
-                  (voice === 'both' && (!chatId || !whatsappPhone || !whatsappApiKey))
-                }
+                disabled={loading || (voice === 'whatsapp' && !whatsappPhone)}
                 className="w-full bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-700 hover:scale-[1.02] active:scale-95 text-white font-black py-5 rounded-2xl shadow-xl shadow-indigo-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-lg uppercase tracking-wider"
               >
                 {loading ? 'Processing...' : 'Schedule Reminder'}
@@ -427,31 +297,6 @@ export default function AITaskPage() {
                 </div>
               ))
             )}
-          </div>
-        </div>
-      </div>
-
-      {/* Footer Info */}
-      <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white/5 border border-white/5 rounded-3xl p-6 flex items-center space-x-4">
-          <div className="w-12 h-12 bg-blue-500/20 rounded-2xl flex items-center justify-center text-blue-400 text-xl font-bold">1</div>
-          <div>
-            <p className="font-bold text-slate-200">AI Voice Call</p>
-            <p className="text-xs text-slate-500">Natural sounding reminders</p>
-          </div>
-        </div>
-        <div className="bg-white/5 border border-white/5 rounded-3xl p-6 flex items-center space-x-4">
-          <div className="w-12 h-12 bg-indigo-500/20 rounded-2xl flex items-center justify-center text-indigo-400 text-xl font-bold">2</div>
-          <div>
-            <p className="font-bold text-slate-200">SMS Fallback</p>
-            <p className="text-xs text-slate-500">Won't miss it if you're busy</p>
-          </div>
-        </div>
-        <div className="bg-white/5 border border-white/5 rounded-3xl p-6 flex items-center space-x-4">
-          <div className="w-12 h-12 bg-purple-500/20 rounded-2xl flex items-center justify-center text-purple-400 text-xl font-bold">3</div>
-          <div>
-            <p className="font-bold text-slate-200">WhatsApp</p>
-            <p className="text-xs text-slate-500">Cross-platform notifications</p>
           </div>
         </div>
       </div>

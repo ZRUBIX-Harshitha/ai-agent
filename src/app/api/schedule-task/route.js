@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(req) {
   try {
-    const { message, chatId, phone, whatsappApiKey, scheduledTime, voice } = await req.json();
+    const { message, phone, scheduledTime, voice } = await req.json();
 
     if (!message || !scheduledTime) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -13,11 +13,9 @@ export async function POST(req) {
     const task = {
       id: uuidv4(),
       message,
-      chatId: (voice === 'telegram' || voice === 'both') ? chatId : null,
-      phone: (voice === 'whatsapp_free' || voice === 'both') ? phone : (voice === 'virtual' ? 'BROWSER' : null),
-      whatsappApiKey: (voice === 'whatsapp_free' || voice === 'both') ? whatsappApiKey : null,
+      phone: voice === 'whatsapp' ? phone : (voice === 'virtual' ? 'BROWSER' : null),
       scheduledTime,
-      voice: voice || 'telegram',
+      voice: voice || 'whatsapp',
     };
 
     scheduleTask(task);

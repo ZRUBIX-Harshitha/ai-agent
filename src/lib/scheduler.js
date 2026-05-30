@@ -1,8 +1,7 @@
 import cron from 'node-cron';
 import fs from 'fs';
 import path from 'path';
-import { sendTelegramReminder } from './telegram';
-import { sendWhatsAppFree } from './whatsapp';
+import { sendWhatsAppMessage } from './whatsapp';
 
 const TASKS_FILE = path.join(process.cwd(), 'tasks.json');
 
@@ -46,28 +45,18 @@ cron.schedule('* * * * *', async () => {
     const taskTime = new Date(task.scheduledTime);
 
     if (taskTime <= now && task.status === 'pending') {
-      console.log(`[Scheduler] Executing Telegram task: ${task.message} for ${task.chatId}`);
+      console.log(`[Scheduler] Executing task: ${task.message} for ${task.phone || 'Browser'}`);
 
       try {
         if (task.voice === 'virtual') {
           task.status = 'completed'; // Handled by frontend
-        } else if (task.voice === 'telegram') {
-          await sendTelegramReminder(task.chatId, task.message);
-          task.status = 'completed';
-        } else if (task.voice === 'whatsapp_free') {
-          await sendWhatsAppFree(task.phone, task.message, task.whatsappApiKey);
-          task.status = 'completed';
-        } else if (task.voice === 'both') {
-          // Send to BOTH Telegram and WhatsApp
-          await Promise.all([
-            sendTelegramReminder(task.chatId, task.message),
-            sendWhatsAppFree(task.phone, task.message, task.whatsappApiKey)
-          ]);
+        } else if (task.voice === 'whatsapp') {
+          await sendWhatsAppMessage(task.phone, task.message);
           task.status = 'completed';
         }
         updated = true;
       } catch (error) {
-        console.error(`[Scheduler] Telegram failed for ${task.id}:`, error.message);
+        console.error(`[Scheduler] Task failed for ${task.id}:`, error.message);
         task.status = 'failed';
         updated = true;
       }

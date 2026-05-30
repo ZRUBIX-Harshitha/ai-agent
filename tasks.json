@@ -46,5 +46,21 @@
     "scheduledTime": "2026-05-30T09:32:00.000Z",
     "voice": "whatsapp",
     "status": "failed"
+  },
+  {
+    "id": "106cc6ee-3d85-417f-9ffd-042187367355",
+    "message": "assign",
+    "phone": "917010156378",
+    "scheduledTime": "2026-05-30T09:37:00.000Z",
+    "voice": "whatsapp",
+    "status": "completed"
+  },
+  {
+    "id": "03cc7de3-8126-493a-ae39-60ebc63242cf",
+    "message": "test bot ",
+    "phone": "917010156378",
+    "scheduledTime": "2026-05-30T09:42:00.000Z",
+    "voice": "whatsapp",
+    "status": "completed"
   }
 ]

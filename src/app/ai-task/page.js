@@ -16,12 +16,19 @@ export default function AITaskPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
   const [scheduledTasks, setScheduledTasks] = useState([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   
   const tasksRef = useRef([]);
 
   useEffect(() => {
     fetchTasks();
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
+      // Ping the cron API to process any due tasks, then refresh the list
+      try {
+        await fetch('/api/cron');
+      } catch (e) {
+        console.error('Failed to trigger cron:', e);
+      }
       fetchTasks();
       checkVirtualAlarms();
     }, 30000);
@@ -40,6 +47,17 @@ export default function AITaskPage() {
     } catch (error) {
       console.error('Failed to fetch tasks:', error);
     }
+  };
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await fetch('/api/cron');
+    } catch (e) {
+      console.error('Failed to trigger cron:', e);
+    }
+    await fetchTasks();
+    setIsRefreshing(false);
   };
 
   const checkVirtualAlarms = () => {
@@ -252,9 +270,22 @@ export default function AITaskPage() {
         <div className="space-y-6">
           <div className="flex items-center justify-between px-4">
             <h2 className="text-2xl font-bold text-slate-200">Upcoming Tasks</h2>
-            <span className="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
-              Live updates
-            </span>
+            <div className="flex items-center space-x-3">
+              <button 
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                className="p-2 bg-white/5 hover:bg-white/10 border border-white/5 rounded-full text-slate-400 hover:text-white transition-all disabled:opacity-50"
+                title="Refresh Tasks"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={isRefreshing ? "animate-spin text-blue-400" : ""}>
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                  <path d="M3 3v5h5"/>
+                </svg>
+              </button>
+              <span className="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
+                Live updates
+              </span>
+            </div>
           </div>
 
           <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">

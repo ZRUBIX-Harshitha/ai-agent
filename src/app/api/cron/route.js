@@ -11,7 +11,7 @@ export async function GET() {
   try {
     const TASKS_FILE = getTasksFile();
     let tasks = [];
-    
+
     if (fs.existsSync(TASKS_FILE)) {
       try {
         const data = fs.readFileSync(TASKS_FILE, 'utf-8');
@@ -25,7 +25,7 @@ export async function GET() {
     let updated = false;
 
     // Hardcoded credentials
-    const WHATSAPP_TOKEN = "EAAOTPaQVbKABRvdm9ZAauS8s9T8UNqVOoRpsHRF2cRlnoRbcMVwYKxwdoZAP1KbsuCZC1QzZC3HiGBz3H8uy6guapz3sZC0iynZAxVOXi8rhznxoauwbHbDXL17nUCeBd1dKRdfZBt7xuKkM5pIjmSAqnAcmxgLbGe4THvwokZCsZBngKbw4OM4xB3Q6vvoMZCeFxAH8RKXSQkMKZCNefcbIj4pyhEFPnK0rcgZAVyj7PW70SMitZB8PeQI0MZB2wfRncoYtI1OIQafa4Co17glAN2NsRKzeRMrwZDZD";
+    const WHATSAPP_TOKEN = "EAAOTPaQVbKABRhL5NeL1AcAUnHAOgAwMZCqvqVh4oZCDfPA9PkJ5ivZCpmMSz7oA9nkTUGseKf1OXpo7GBONCoDMFfdP44ZBjX3nh9Nnj0eEfYpUpAhW2v0xFSIL4DrUNY1pBadndwayGPYoeLsMtDIGV2KfVEKQN9hKTS5Psc7EBKLZAHmjTQXrpN6pZCvgCNDBE7Gew3lACiJfCtVx08Du3mKVRuKDGMt90kH5P5HFLaNdHIUe2SqvCQps9oD1Kfh89MVVN2yX0hejTN6XrZCJqWI";
     const PHONE_NUMBER_ID = "1083960074809421";
 
     for (const task of tasks) {
@@ -40,7 +40,7 @@ export async function GET() {
             // WhatsApp API Logic
             const cleanPhone = task.phone.replace(/\+/g, '').replace(/\s/g, '');
             const url = `https://graph.facebook.com/v19.0/${PHONE_NUMBER_ID}/messages`;
-            
+
             const response = await fetch(url, {
               method: 'POST',
               headers: {
@@ -58,10 +58,10 @@ export async function GET() {
                 }
               })
             });
-            
+
             const result = await response.json();
             if (result.error) throw new Error(result.error.message);
-            
+
             task.status = 'completed';
             updated = true;
           }

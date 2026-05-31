@@ -32,34 +32,10 @@
     "status": "pending"
   },
   {
-    "id": "d8ebacec-a1f1-44c4-a52d-03ad9deb5a29",
-    "message": "test",
+    "id": "a94aa4c8-b021-4944-b984-35c15dda8a6e",
+    "message": "meeting ",
     "phone": "917010156378",
-    "scheduledTime": "2026-05-30T09:16:00.000Z",
-    "voice": "whatsapp",
-    "status": "completed"
-  },
-  {
-    "id": "4319e650-02ac-4bd6-87c9-db9e838c6510",
-    "message": "test3",
-    "phone": "917010156378",
-    "scheduledTime": "2026-05-30T09:32:00.000Z",
-    "voice": "whatsapp",
-    "status": "failed"
-  },
-  {
-    "id": "106cc6ee-3d85-417f-9ffd-042187367355",
-    "message": "assign",
-    "phone": "917010156378",
-    "scheduledTime": "2026-05-30T09:37:00.000Z",
-    "voice": "whatsapp",
-    "status": "completed"
-  },
-  {
-    "id": "03cc7de3-8126-493a-ae39-60ebc63242cf",
-    "message": "test bot ",
-    "phone": "917010156378",
-    "scheduledTime": "2026-05-30T09:42:00.000Z",
+    "scheduledTime": "2026-05-30T10:47:00.000Z",
     "voice": "whatsapp",
     "status": "completed"
   }

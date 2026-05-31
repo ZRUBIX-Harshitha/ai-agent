@@ -166,11 +166,11 @@ export default function AITaskPage() {
         </p>
       </div>
 
-      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
         {/* Left Column: Form */}
-        <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-10 shadow-3xl relative overflow-hidden h-fit">
-          <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-600/20 blur-[100px] rounded-full"></div>
-          <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-indigo-600/20 blur-[100px] rounded-full"></div>
+        <div className="bg-slate-900/40 backdrop-blur-2xl border border-slate-700/50 rounded-[2.5rem] p-10 shadow-2xl shadow-indigo-900/20 relative overflow-hidden h-fit group/form">
+          <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/20 blur-[100px] rounded-full group-hover/form:bg-indigo-500/30 transition-all duration-700"></div>
+          <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-purple-500/20 blur-[100px] rounded-full group-hover/form:bg-purple-500/30 transition-all duration-700"></div>
 
           <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
             <div className="space-y-3">
@@ -180,7 +180,7 @@ export default function AITaskPage() {
                 type="text"
                 required
                 placeholder="Finish the project..."
-                className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder:text-slate-400 text-lg"
+                className="w-full bg-slate-950/50 border border-slate-700/50 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 hover:border-slate-600 transition-all placeholder:text-slate-500 text-lg shadow-inner"
                 value={task}
                 onChange={(e) => setTask(e.target.value)}
               />
@@ -193,7 +193,7 @@ export default function AITaskPage() {
                   id="date"
                   type="date"
                   required
-                  className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all text-slate-200"
+                  className="w-full bg-slate-950/50 border border-slate-700/50 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 hover:border-slate-600 transition-all text-slate-200 shadow-inner [color-scheme:dark]"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                 />
@@ -204,7 +204,7 @@ export default function AITaskPage() {
                   id="time"
                   type="time"
                   required
-                  className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all text-slate-200"
+                  className="w-full bg-slate-950/50 border border-slate-700/50 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 hover:border-slate-600 transition-all text-slate-200 shadow-inner [color-scheme:dark]"
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
                 />
@@ -217,15 +217,15 @@ export default function AITaskPage() {
                   <label htmlFor="whatsapp-phone" className="text-sm font-semibold text-slate-300 ml-1">
                     WhatsApp Phone Number
                   </label>
-                  <input id="whatsapp-phone" type="tel" required placeholder="Phone (e.g. 91987...)" className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all text-sm" value={whatsappPhone} onChange={(e) => setWhatsappPhone(e.target.value)} />
+                  <input id="whatsapp-phone" type="password" required placeholder="Phone (e.g. 91987...)" className="w-full bg-slate-950/50 border border-slate-700/50 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 hover:border-slate-600 transition-all text-sm tracking-widest font-mono shadow-inner" value={whatsappPhone} onChange={(e) => setWhatsappPhone(e.target.value)} />
                 </div>
               )}
 
               {voice === 'virtual' && (
                 <div className="space-y-3">
                   <label className="text-sm font-semibold text-slate-300 ml-1">Offline Mode</label>
-                  <div className="w-full bg-black/20 border border-white/5 rounded-2xl px-6 py-4 text-slate-400 text-sm">
-                    Browser speaker will be used.
+                  <div className="w-full bg-slate-900/50 border border-slate-700/50 rounded-2xl px-6 py-4 text-slate-400 text-sm flex items-center shadow-inner">
+                    <span className="mr-2">🔊</span> Browser speaker will be used.
                   </div>
                 </div>
               )}
@@ -234,7 +234,7 @@ export default function AITaskPage() {
                 <label htmlFor="voice-select" className="text-sm font-semibold text-slate-300 ml-1">Remind Via</label>
                 <select
                   id="voice-select"
-                  className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all text-slate-200 appearance-none pointer"
+                  className="w-full bg-slate-950/50 border border-slate-700/50 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 hover:border-slate-600 transition-all text-slate-200 appearance-none cursor-pointer shadow-inner"
                   value={voice}
                   onChange={(e) => setVoice(e.target.value)}
                 >
@@ -247,23 +247,24 @@ export default function AITaskPage() {
               <button
                 type="submit"
                 disabled={loading || (voice === 'whatsapp' && !whatsappPhone)}
-                className="w-full bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-700 hover:scale-[1.02] active:scale-95 text-white font-black py-5 rounded-2xl shadow-xl shadow-indigo-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-lg uppercase tracking-wider"
+                className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:via-indigo-500 hover:to-purple-500 hover:shadow-[0_0_30px_rgba(99,102,241,0.4)] active:scale-[0.98] text-white font-black py-5 rounded-2xl shadow-xl shadow-indigo-900/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg uppercase tracking-wider relative overflow-hidden group/btn"
               >
-                {loading ? 'Processing...' : 'Schedule Reminder'}
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 ease-in-out"></div>
+                <span className="relative z-10">{loading ? 'Processing...' : 'Schedule Reminder'}</span>
               </button>
 
               <button
                 type="button"
                 onClick={testVirtualCall}
-                className="w-full bg-transparent border-2 border-slate-500/30 hover:bg-white/5 text-slate-300 font-bold py-5 rounded-2xl transition-all uppercase tracking-wider text-xs"
+                className="w-full bg-slate-800/50 backdrop-blur-sm border-2 border-slate-700 hover:border-slate-500 hover:bg-slate-700/50 text-slate-300 font-bold py-5 rounded-2xl transition-all duration-300 uppercase tracking-wider text-xs flex items-center justify-center gap-2 group/test"
               >
-                🔊 Test AI Speaker
+                <span className="group-hover/test:scale-125 transition-transform duration-300">🔊</span> Test AI Speaker
               </button>
             </div>
           </form>
 
           {message.text && (
-            <div className={`mt-8 p-5 rounded-2xl text-center text-sm font-bold border ${message.type === 'success' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+            <div className={`mt-8 p-5 rounded-2xl text-center text-sm font-bold border backdrop-blur-md animate-in fade-in slide-in-from-bottom-4 duration-500 ${message.type === 'success' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.15)]' : 'bg-rose-500/10 text-rose-400 border-rose-500/30 shadow-[0_0_20px_rgba(244,63,94,0.15)]'
               }`}>
               {message.text}
             </div>
@@ -302,31 +303,31 @@ export default function AITaskPage() {
               </div>
             ) : (
               scheduledTasks.map((t) => (
-                <div key={t.id} className="group bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 rounded-3xl p-6 transition-all duration-300 relative">
+                <div key={t.id} className="group bg-slate-900/40 backdrop-blur-md hover:bg-slate-800/60 border border-slate-800 hover:border-slate-600 rounded-3xl p-7 transition-all duration-300 relative hover:shadow-xl hover:shadow-indigo-500/10">
                   <div className="flex justify-between items-start">
-                    <div className="space-y-2">
-                      <h3 className="text-lg font-bold text-slate-100">{t.message}</h3>
-                      <div className="flex items-center space-x-4 text-xs font-medium text-slate-400">
-                        <span className="flex items-center">
-                          <span className="mr-1.5 opacity-60">🕒</span>
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-bold text-slate-100 leading-snug pr-8">{t.message}</h3>
+                      <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-slate-400">
+                        <span className="flex items-center bg-slate-950/50 px-3 py-1.5 rounded-lg border border-slate-800">
+                          <span className="mr-2 text-indigo-400">🕒</span>
                           {new Date(t.scheduledTime).toLocaleString()}
                         </span>
-                        <span className="flex items-center">
-                          <span className="mr-1.5 opacity-60">👤</span>
+                        <span className="flex items-center bg-slate-950/50 px-3 py-1.5 rounded-lg border border-slate-800">
+                          <span className="mr-2 text-emerald-400">👤</span>
                           {VOICES.find(v => v.id === t.voice)?.name || 'Standard'}
                         </span>
                       </div>
                     </div>
                     <button
                       onClick={() => handleDelete(t.id)}
-                      className="opacity-0 group-hover:opacity-100 bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white p-2.5 rounded-xl transition-all"
+                      className="opacity-0 group-hover:opacity-100 bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white p-2.5 rounded-xl transition-all duration-300 absolute top-6 right-6"
                       aria-label="Delete task"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /></svg>
                     </button>
                   </div>
 
-                  <div className="mt-5 flex items-center justify-between">
+                  <div className="mt-6 flex items-center justify-between pt-5 border-t border-slate-800">
                     <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest ${getStatusColor(t.status)}`}>
                       {t.status.replace(/_/g, ' ')}
                     </span>
@@ -340,6 +341,86 @@ export default function AITaskPage() {
           </div>
         </div>
       </div>
+
+      {/* SEO & Voice Search Optimization Section */}
+      <section className="w-full max-w-6xl bg-white/5 border border-white/10 rounded-[2.5rem] p-10 backdrop-blur-xl relative z-10">
+        <h2 className="text-3xl font-black tracking-tight text-slate-100 mb-8">Frequently Asked Questions</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-3">
+            <h3 className="text-xl font-bold text-emerald-400">What is AI Multi-Reminder?</h3>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              AI Multi-Reminder is an automated task management tool that sends you text reminders via WhatsApp Business and plays offline voice alerts directly through your browser.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <h3 className="text-xl font-bold text-emerald-400">How do I schedule a WhatsApp reminder?</h3>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              To schedule a WhatsApp reminder, simply enter your task description, select the date and time, input your WhatsApp phone number, and click 'Schedule Reminder'.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <h3 className="text-xl font-bold text-emerald-400">Where can I receive my offline voice alerts?</h3>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              Offline voice alerts are played securely right within your web browser. Just keep the tab open, and the AI will speak your reminder aloud when the time comes.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <h3 className="text-xl font-bold text-emerald-400">When should I use this AI assistant?</h3>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              Use this AI assistant whenever you need reliable, automated follow-ups for your business or personal tasks without manually checking the clock.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* JSON-LD Schema for Voice Search and SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is AI Multi-Reminder?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "AI Multi-Reminder is an automated task management tool that sends you text reminders via WhatsApp Business and plays offline voice alerts directly through your browser."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do I schedule a WhatsApp reminder?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "To schedule a WhatsApp reminder, simply enter your task description, select the date and time, input your WhatsApp phone number, and click 'Schedule Reminder'."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Where can I receive my offline voice alerts?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Offline voice alerts are played securely right within your web browser. Just keep the tab open, and the AI will speak your reminder aloud when the time comes."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "When should I use this AI assistant?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Use this AI assistant whenever you need reliable, automated follow-ups for your business or personal tasks without manually checking the clock."
+                }
+              }
+            ]
+          })
+        }}
+      />
     </main>
   );
 }
